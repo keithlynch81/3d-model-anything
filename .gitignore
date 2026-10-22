@@ -8,6 +8,12 @@ xcuserdata/
 __pycache__/
 *.pyc
 .env*
+signing/
+.venv-ipad/
+*.p12
+*.p8
+*.key
+*.mobileprovision
 data/captures-in/
 data/captures/
 data/recordings/
