@@ -54,12 +54,18 @@ struct Coverage {
       }
       return Wall(a: a, b: b, segments: segments, lowConfidence: wall.confidence != .high)
     }
-    objects = room.objects.map { obj in
+    objects = room.objects.map { obj -> Box in
       let t = obj.transform
       let c = simd_make_float3(t.columns.3)
-      let x = simd_make_float3(t.columns.0) * obj.dimensions.x / 2
-      let z = simd_make_float3(t.columns.2) * obj.dimensions.z / 2
-      let corners = [c - x - z, c + x - z, c + x + z, c - x + z].map { SIMD2($0.x, $0.z) }
+      let x: SIMD3<Float> = simd_make_float3(t.columns.0) * obj.dimensions.x / Float(2)
+      let z: SIMD3<Float> = simd_make_float3(t.columns.2) * obj.dimensions.z / Float(2)
+      let corner0: SIMD3<Float> = c - x - z
+      let corner1: SIMD3<Float> = c + x - z
+      let corner2: SIMD3<Float> = c + x + z
+      let corner3: SIMD3<Float> = c - x + z
+      let corners: [SIMD2<Float>] = [corner0, corner1, corner2, corner3].map {
+        SIMD2<Float>($0.x, $0.z)
+      }
       return Box(corners: corners, covered: photos.contains { $0.sees(c, surfaceNormal: nil) }, label: "\(obj.category)")
     }
     gaps = (room.doors + room.openings).map { Gap(a: Self.endpoints($0).0, b: Self.endpoints($0).1, isWindow: false) }
