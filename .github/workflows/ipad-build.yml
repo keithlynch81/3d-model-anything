@@ -8,7 +8,8 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-15
+    # Intel hosts can cross-compile for iPad; avoid the constrained ARM runner pool.
+    runs-on: macos-15-intel
     timeout-minutes: 30
     environment: ipad-signing
     env:
